@@ -13,7 +13,10 @@
 	<section class="todoapp">
 		<header class="header">
 			<h1>Todos</h1>
-			<input class="new-todo" placeholder="What needs to be done?" autofocus>
+			<form method="POST" action="{% url 'create' %}">
+				{% csrf_token %}
+				<input class="new-todo" placeholder="What needs to be done?" name="title" autofocus>
+			</form>
 		</header>
 		
 		<!-- This section should be hidden by default and shown when there are todos -->
@@ -32,7 +35,7 @@
 							<input class="toggle" type="checkbox"
 								{% if item.status %}checked{% endif %}>
 							<label>{{ item.title }}</label>
-							<a href="{% url 'delete' 10 %}" class="destroy"></a>
+							<a href="{% url 'delete' item.id %}" class="destroy"></a>
 						</div>
 						<!-- <input class="edit" value="Create a TodoMVC template"> -->
 					</li>

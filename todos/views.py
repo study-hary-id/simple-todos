@@ -1,5 +1,6 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, reverse
+from django.core.exceptions import ObjectDoesNotExist
 from .models import Todos
 
 
@@ -28,7 +29,13 @@ def clear_completed(request):
 
 
 def create(request):
-	return render(request, 'todos/index.html')
+	try:
+		title = request.POST['title']
+		todos = Todos(title=title)
+		todos.save()
+		return HttpResponseRedirect(reverse('index'))
+	except Exception:
+		return HttpResponseRedirect(reverse('index'))
 
 
 def update(request, id):
@@ -36,5 +43,10 @@ def update(request, id):
 
 
 def delete(request, id):
-	return render(request, 'todos/index.html')
+	try:
+		todo = Todos.objects.get(id=id)
+		todo.delete()
+		return HttpResponseRedirect(reverse('index'))
+	except ObjectDoesNotExist:
+		return HttpResponseRedirect(reverse('index'))
 
