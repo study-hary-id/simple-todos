@@ -31,12 +31,18 @@
 				{% if items %}
 					{% for item in items %}
 					<li {% if item.status %}class="completed"{% endif %}>
+					
 						<div class="view">
-							<input class="toggle" type="checkbox"
-								{% if item.status %}checked{% endif %}>
-							<label>{{ item.title }}</label>
-							<a href="{% url 'delete' item.id %}" class="destroy"></a>
+							<form method="POST" action="{% url 'update' item.id %}">
+								{% csrf_token %}
+								<input class="toggle" name="status"
+									type="checkbox" onclick="this.form.submit()"
+									{% if item.status %}checked{% endif %}>
+								<label>{{ item.title }}</label>
+								<a href="{% url 'delete' item.id %}" class="destroy"></a>
+							</form>
 						</div>
+						
 						<!-- <input class="edit" value="Create a TodoMVC template"> -->
 					</li>
 					{% endfor %}
@@ -67,10 +73,6 @@
 			<a href="{% url 'clear_completed' %}" class="clear-completed">Clear completed</a>
 		</footer>
 	</section>
-
-	<footer class="info">
-		<p>Double-click to edit a todo</p>
-	</footer>
 </body>
 
 </html>

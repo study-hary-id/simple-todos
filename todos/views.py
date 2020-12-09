@@ -25,7 +25,8 @@ def completed(request):
 
 
 def clear_completed(request):
-	return render(request, 'todos/index.html')
+	Todos.objects.filter(status=True).delete()
+	return HttpResponseRedirect(reverse('index'))
 
 
 def create(request):
@@ -39,7 +40,13 @@ def create(request):
 
 
 def update(request, id):
-	return render(request, 'todos/index.html')
+	try:
+		todo = Todos.objects.get(id=id)
+		todo.status = not todo.status
+		todo.save()
+		return HttpResponseRedirect(reverse('index'))
+	except ObjectDoesNotExist:
+		return HttpResponseRedirect(reverse('index'))
 
 
 def delete(request, id):
