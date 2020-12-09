@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .models import Todos
 
 def index(request):
-	return render(request, 'todos/index.html')
+	items = Todos.objects.order_by('-id')
+	return render(request, 'todos/index.html', {'items': items})
 
 def active(request):
 	return render(request, 'todos/index.html')
